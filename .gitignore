@@ -1,0 +1,40 @@
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+Thumbs.db
+
+# Byte-compiled / optimized / DLL files #
+#########################################
+__pycache__/
+
+# Environments #
+################
+.env
+.venv
+env/
+venv/
+
+# Python: byte-compiled / optimized / DLL files
+__pycache__
+*.py[cod]
+*$py.class
+
+# Vim #
+#######
+# Swap
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-v][a-z]
+[._]sw[a-p]
+
+# JetBrains Based IDEs #
+########################
+.idea
+
+# Misc. #
+#########
+
+# Jupyter-notebook files:
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
