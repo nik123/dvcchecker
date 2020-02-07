@@ -39,6 +39,8 @@ def main():
 
     if count:
         exit(1)
+    else:
+        print("Everything is ok")
 
 
 if __name__ == "__main__":
