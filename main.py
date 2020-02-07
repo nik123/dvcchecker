@@ -7,8 +7,8 @@ from yaml import load, Loader
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--stage", help="Path to dvc stage file")
-    parser.add_argument("--repo", help="Path to dvc repository")
+    parser.add_argument("--stage", required=True, help="Path to dvc stage file")
+    parser.add_argument("--repo", required=True, help="Path to dvc repository")
     args = parser.parse_args()
     stage = args.stage
     repo = args.repo
