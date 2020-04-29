@@ -29,45 +29,54 @@ def count_missing_outs_in_stage(stage, repo) -> int:
     return count
 
 
+def _count_missing_outs_in_dir(dirpath):
+    count = 0
+    for dirpath, _, filenames in os.walk(stage):
+        for filename in filenames:
+            _, ext = os.path.splitext(filename)
+            if ext.lower() != ".dvc":
+                continue
+            count += count_missing_outs_in_stage(
+                os.path.join(stage, dirpath, filename), repo
+            )
+            stage_count += 1
+
+    return count
+
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--stage", required=True, help="Path to dvc stage file")
+    parser.add_argument(
+        "--stages", required=True, nargs="+", help="Paths to dvc stage file"
+    )
     parser.add_argument("--repo", required=True, help="Path to dvc repository")
     args = parser.parse_args()
-    stage = args.stage
+    stages = args.stages
     repo = args.repo
-
-    if not os.path.exists(stage):
-        raise ValueError("File '{}' doesn't exist".format(stage))
-    if not os.path.exists(repo):
-        raise ValueError("File '{}' doesn't exist".format(repo))
 
     stage_count = 0
     count = 0
 
-    if os.path.isdir(stage):
-        for dirpath, _, filenames in os.walk(stage):
-            for filename in filenames:
-                _, ext = os.path.splitext(filename)
-                if ext.lower() != '.dvc':
-                    continue
-                count += count_missing_outs_in_stage(
-                    os.path.join(stage, dirpath, filename),
-                    repo
-                )
-                stage_count += 1
-    else:
-        _, ext = os.path.splitext(stage)
-        if ext.lower() != '.dvc':
-            raise ValueError("'{}' is not a *.dvc file!".format(stage))
+    for stage in stages:
+        if not os.path.exists(stage):
+            raise ValueError("File '{}' doesn't exist".format(stage))
+        if not os.path.exists(repo):
+            raise ValueError("File '{}' doesn't exist".format(repo))
 
-        count += count_missing_outs_in_stage(stage, repo)
-        stage_count += 1
+        if os.path.isdir(stage):
+            count += _count_missing_outs_in_dir(stage)
+        else:
+            _, ext = os.path.splitext(stage)
+            if ext.lower() != ".dvc":
+                raise ValueError("'{}' is not a *.dvc file!".format(stage))
 
-    if count:
-        exit(1)
-    else:
-        print("Checked {} stage files. Everything is ok".format(stage_count))
+            count += count_missing_outs_in_stage(stage, repo)
+            stage_count += 1
+
+        if count:
+            exit(1)
+        else:
+            print("Checked {} stage files. Everything is ok".format(stage_count))
 
 
 if __name__ == "__main__":
