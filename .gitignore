@@ -35,6 +35,8 @@ __pycache__
 # Misc. #
 #########
 
+*.egg-info/
+
 # Jupyter-notebook files:
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
