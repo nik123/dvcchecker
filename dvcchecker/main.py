@@ -28,19 +28,21 @@ def count_missing_outs_in_stage(stage, repo) -> int:
     return count
 
 
-def _count_missing_outs_in_dir(dirpath):
+def _count_missing_outs_in_dir(dirpath, repo):
+    stage_count = 0
     count = 0
-    for dirpath, _, filenames in os.walk(stage):
+    for nesteddir, _, filenames in os.walk(dirpath):
         for filename in filenames:
             _, ext = os.path.splitext(filename)
             if ext.lower() != ".dvc":
                 continue
+
             count += count_missing_outs_in_stage(
-                os.path.join(stage, dirpath, filename), repo
+                os.path.join(nesteddir, filename), repo
             )
             stage_count += 1
 
-    return count
+    return stage_count, count
 
 
 def main():
@@ -63,7 +65,9 @@ def main():
             raise ValueError("File '{}' doesn't exist".format(repo))
 
         if os.path.isdir(stage):
-            count += _count_missing_outs_in_dir(stage)
+            dir_stage_count, dir_count = _count_missing_outs_in_dir(stage, repo)
+            stage_count += dir_stage_count
+            count += dir_count
         else:
             _, ext = os.path.splitext(stage)
             if ext.lower() != ".dvc":
