@@ -76,7 +76,7 @@ def main():
             count += count_missing_outs_in_stage(stage, repo)
             stage_count += 1
 
-        if count:
-            exit(1)
-        else:
-            print("Checked {} stage files. Everything is ok".format(stage_count))
+    if count:
+        exit(1)
+    else:
+        print("Checked {} stage files. Everything is ok".format(stage_count))
